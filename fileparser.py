@@ -5,22 +5,22 @@ class _ParserFactory:
     def __init__(self):
         self._creators = {}
 
-    def register_format(self, format, creator):
+    def register_ext(self, format, creator):
         self._creators[format] = creator
 
-    def get_parser(self, format):
-        creator = self._creators.get(format)
+    def get_parser(self, extension):
+        creator = self._creators.get(extension)
         if not creator:
-            raise ValueError(format)
+            raise ValueError(extension)
         return creator()
 
-    def get_types(self):
+    def get_ext(self):
         return list(self._creators.keys())
 
 
 factory = _ParserFactory()
-factory.register_format('json', json.JsonParser)
+factory.register_ext('json', json.JsonParser)
 
 
-def get_parser(file_format: str):
-    return factory.get_parser(file_format)
+def get_parser(file_ext: str):
+    return factory.get_parser(file_ext)

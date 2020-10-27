@@ -11,6 +11,7 @@ class JsonParser(FileParser, ABC):
             data = data[k if not k.isdigit() else int(k)]
         return json.dumps(data, indent=4)
 
-    def _parse_aggregate(self, file):
-        data = json.load(file)
-        return json.dumps(data, indent=4)
+
+def _parse_aggregate(self, file):
+    data = json.load(file)
+    return json.dumps(data, indent=4)

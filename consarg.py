@@ -4,7 +4,7 @@ from fileparser import factory
 
 
 def arg_parser():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(exit_on_error=False)
     parser.add_argument(
         'file',
         type=argparse.FileType()
@@ -14,25 +14,32 @@ def arg_parser():
         type=str
     )
     parser.add_argument(
-        '-t', '--filetype',
+        '-e', '--extension',
         type=str.lower,
-        choices=factory.get_types() + ['auto'],
+        choices=factory.get_ext() + ['auto'],
         default='auto'
     )
 
     return parser
 
 
-def auto_type(filename: str) -> str:
-    filetype = filename.split('.')[-1]
-    if filetype not in factory.get_types():
-        print("Unsupported type")
-    return filetype
+def auto_ext(filename: str) -> str:
+    file_ext = filename.split('.')[-1]
+    if file_ext not in factory.get_ext():
+        pass
+        #raise ArgumentParserError(f"The file format defined automatically is not supported: {file_ext}")
+    return file_ext
 
 
-def parse() -> argparse.Namespace:
-    namespace = arg_parser().parse_args(sys.argv[1:])
-    if namespace.filetype == 'auto':
-        namespace.filetype = auto_type(namespace.file.name)
+def parse():
+    try:
+        namespace = arg_parser().parse_args(sys.argv[1:])
+        if namespace.extension == 'auto':
+            namespace.extension = auto_ext(namespace.file.name)
+        return namespace
+    except argparse.ArgumentError as e:
+        if e.argument_name == 'file':
+            raise FileNotFoundError(e)
+        if e.argument_name == '-e/--extension':
+            raise AttributeError(e)
 
-    return namespace

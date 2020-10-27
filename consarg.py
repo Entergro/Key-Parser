@@ -26,8 +26,7 @@ def arg_parser():
 def auto_ext(filename: str) -> str:
     file_ext = filename.split('.')[-1]
     if file_ext not in factory.get_ext():
-        pass
-        #raise ArgumentParserError(f"The file format defined automatically is not supported: {file_ext}")
+        raise RuntimeError(f"Unsupported extension: {file_ext}")
     return file_ext
 
 
@@ -42,4 +41,5 @@ def parse():
             raise FileNotFoundError(e)
         if e.argument_name == '-e/--extension':
             raise AttributeError(e)
-
+    except RuntimeError as e:
+        raise RuntimeError(e)

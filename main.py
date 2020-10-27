@@ -25,7 +25,7 @@ def main():
         logger.error("File not found")
         logger.error(e)
         print("Error: File not found")
-    except AttributeError as e:
+    except (AttributeError, RuntimeError) as e:
         logger.error("Error: File extension parsing error")
         logger.error(e)
     else:
